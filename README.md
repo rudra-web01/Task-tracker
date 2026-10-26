@@ -96,8 +96,8 @@ Docker is optional if you choose the Docker-based setup.
 ### 1. Clone the repository
 
 ```bash
-git clone <YOUR_GITHUB_REPOSITORY_URL>
-cd employee-task-tracker
+git clone https://github.com/rudra-web01/Task-tracker.git
+cd Task-tracker
 ```
 
 Replace the repository URL with your actual GitHub repository URL.
