@@ -17,14 +17,14 @@ export default function Navbar() {
           <span className="brand-mark">
             Task<span className="dot">Flow</span>
           </span>
-          <span className="brand-sub">Employee Task Tracker</span>
+          <span className="brand-sub">Task Tracker</span>
         </div>
         {user && (
           <div className="nav-user">
             <div className="who">
               <strong>{user.name}</strong>
               <br />
-              <span>{user.role}</span>
+              <span>{user.role === 'employee' ? 'User' : user.role}</span>
             </div>
             <button className="btn btn-sm" onClick={handleLogout}>
               Sign out

@@ -18,24 +18,34 @@ const UserModel = {
     return rows[0] || null;
   },
 
+  async updateStatus(id, isActive) {
+  await query(
+    'UPDATE users SET is_active = ? WHERE id = ?',
+    [isActive, id]
+  );
+
+  return this.findById(id);
+},
+
   async findById(id) {
     const rows = await query(
-      'SELECT id, name, email, role, created_at FROM users WHERE id = ? LIMIT 1',
+      'SELECT id, name, email, role, created_at, is_active FROM users WHERE id = ? LIMIT 1',
       [id]
     );
     return rows[0] || null;
   },
 
-  /** List all users. Optionally filter by role (e.g. only employees). */
+  /** List all users. Optionally filter by role (e.g. only teams). */
   async findAll({ role } = {}) {
     if (role) {
       return query(
-        'SELECT id, name, email, role, created_at FROM users WHERE role = ? ORDER BY name ASC',
+        'SELECT id, name, email, role, created_at, is_active FROM users WHERE role = ? ORDER BY name ASC',
         [role]
       );
     }
+
     return query(
-      'SELECT id, name, email, role, created_at FROM users ORDER BY name ASC'
+      'SELECT id, name, email, role, created_at, is_active FROM users ORDER BY name ASC'
     );
   },
 };

@@ -15,16 +15,24 @@ export const authApi = {
   me: () => client.get('/auth/me').then((r) => r.data),
 };
 
+
 export const userApi = {
   list: (role) => client.get(`/users${qs({ role })}`).then((r) => r.data.data),
   tasks: (id, params) => client.get(`/users/${id}/tasks${qs(params)}`).then((r) => r.data),
+  create: (payload) => client.post('/users', payload).then((r) => r.data.data),
+  updateStatus: (id, is_active) =>
+  client.patch(`/users/${id}/status`, { is_active }).then((r) => r.data.data),
 };
+
 
 export const taskApi = {
   list: (params) => client.get(`/tasks${qs(params)}`).then((r) => r.data),
   get: (id) => client.get(`/tasks/${id}`).then((r) => r.data.data),
   create: (payload) => client.post('/tasks', payload).then((r) => r.data.data),
   update: (id, payload) => client.put(`/tasks/${id}`, payload).then((r) => r.data.data),
+  summary: () => client.get('/tasks/summary').then((r) => r.data.data),
+  employeeWorkload: () =>
+  client.get('/tasks/employee-workload').then((r) => r.data.data),
 };
 
 export const activityApi = {

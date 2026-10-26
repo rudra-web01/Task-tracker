@@ -237,3 +237,63 @@ table.tasks tr:hover td { background: rgba(196,80,42,.03); }
   .auth-wrap { grid-template-columns: 1fr; }
   .auth-art { display: none; }
 }
+
+
+/* Kanban board layout */
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+  margin: 1rem 0 2rem;
+}
+
+.kanban-column {
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.kanban-column h2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 1rem;
+  font-size: 1rem;
+}
+
+.kanban-column h2 span {
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.kanban-column-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 140px;
+}
+
+.kanban-column-body > .card {
+  background: white;
+  cursor: grab;
+  overflow-wrap: anywhere;
+  touch-action: manipulation;
+}
+
+.kanban-column-body > .card:active {
+  cursor: grabbing;
+}
+
+.kanban-column-body > .card p {
+  margin: 0.5rem 0;
+}
+
+@media (max-width: 800px) {
+  .kanban-board {
+    grid-template-columns: 1fr;
+  }
+}
+

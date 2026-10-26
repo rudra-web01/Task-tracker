@@ -1,3 +1,4 @@
+import KanbanBoard from '../components/KanbanBoard';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Navbar from '../components/Navbar';
 import StatusBadge from '../components/StatusBadge';
@@ -35,7 +36,7 @@ export default function EmployeeDashboard() {
     setLoading(true);
     setError('');
     try {
-      // GET /tasks already scopes employees to their own tasks server-side.
+      // GET /tasks already scopes users to their own tasks server-side.
       const res = await taskApi.list({
         status: statusFilter,
         sortBy: 'due_date',
@@ -85,6 +86,26 @@ export default function EmployeeDashboard() {
     }
   }
 
+  async function handleStatusChange(task, newStatus) {
+  if (task.status === newStatus) return;
+
+  setUpdatingId(task.id);
+
+  try {
+    await taskApi.update(task.id, { status: newStatus });
+
+    push(
+      `"${task.title}" moved to ${newStatus.replace('_', ' ')}`,
+    );
+
+    await load();
+  } catch (err) {
+    push(err.message || 'Failed to update task status', 'error');
+  } finally {
+    setUpdatingId(null);
+  }
+}
+
   return (
     <>
       <Navbar />
@@ -122,6 +143,12 @@ export default function EmployeeDashboard() {
         </div>
 
         <div className="card card-pad">
+          <div className="section-title">My Kanban Board</div>
+
+          <KanbanBoard
+            tasks={tasks}
+            onStatusChange={handleStatusChange}
+          />
           <div className="section-title">Task list</div>
           <div className="filters">
             <div className="field">

@@ -14,7 +14,7 @@ const TaskController = {
     res.status(201).json({ data: task });
   },
 
-  // GET /tasks  — admins see all, employees see their own. Supports filters + pagination.
+  // GET /tasks  — admins see all, teams see their own. Supports filters + pagination.
   async list(req, res) {
     const { status, dueBefore, dueAfter, page, limit, sortBy, order } = req.query;
     const result = await TaskService.listTasks(
@@ -31,6 +31,20 @@ const TaskController = {
     );
     res.json(result);
   },
+
+    // GET /tasks/summary (admin only)
+  async summary(req, res) {
+    const summary = await TaskService.getSummary(req.user);
+    res.json({ data: summary });
+  },
+
+  
+  // GET /tasks/user-workload (admin only)
+  async employeeWorkload(req, res) {
+    const workload = await TaskService.getEmployeeWorkload(req.user);
+    res.json({ data: workload });
+  },
+
 
   // GET /tasks/:id
   async getOne(req, res) {

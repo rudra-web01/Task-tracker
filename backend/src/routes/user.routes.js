@@ -11,6 +11,20 @@ router.use(authenticate);
 // GET /users  (admin only)
 router.get('/', authorize('admin'), asyncHandler(UserController.list));
 
+// POST /users — admin only, creates an employee
+router.post(
+  '/',
+  authorize('admin'),
+  asyncHandler(UserController.create)
+);
+
+// PATCH /users/:id/status — admin only
+router.patch(
+  '/:id/status',
+  authorize('admin'),
+  asyncHandler(UserController.updateStatus)
+);
+
 // GET /users/:id/tasks  (admin, or the employee themselves)
 router.get('/:id/tasks', asyncHandler(UserController.tasks));
 

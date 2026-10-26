@@ -6,18 +6,33 @@
  */
 const { verifyToken } = require('../utils/jwt');
 const ApiError = require('../utils/ApiError');
+const UserModel = require('../models/user.model');
 
-function authenticate(req, _res, next) {
+async function authenticate(req, _res, next) {
   const header = req.headers.authorization || '';
   const [scheme, token] = header.split(' ');
 
   if (scheme !== 'Bearer' || !token) {
-    return next(ApiError.unauthorized('Missing or malformed Authorization header'));
+    return next(
+      ApiError.unauthorized('Missing or malformed Authorization header')
+    );
   }
 
   try {
     const payload = verifyToken(token);
-    req.user = { id: payload.id, role: payload.role, name: payload.name };
+
+    const user = await UserModel.findById(payload.id);
+
+    if (!user || user.is_active === false || user.is_active === 0) {
+      return next(ApiError.unauthorized('Account is inactive or unavailable'));
+    }
+
+    req.user = {
+      id: user.id,
+      role: user.role,
+      name: user.name,
+    };
+
     next();
   } catch (_err) {
     next(ApiError.unauthorized('Invalid or expired token'));

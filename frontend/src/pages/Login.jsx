@@ -45,7 +45,7 @@ export default function Login() {
             and finish work.
           </h1>
           <p>
-            A focused task tracker for teams. Admins assign and oversee; employees
+            A focused task tracker for teams. Admins assign and oversee; users
             move their work forward, one status at a time.
           </p>
         </div>

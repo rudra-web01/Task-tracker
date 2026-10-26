@@ -22,8 +22,15 @@ router.post(
   asyncHandler(TaskController.create)
 );
 
-// GET /tasks  (admins: all tasks, employees: own tasks)
+// GET /tasks  (admins: all tasks, teams: own tasks)
 router.get('/', asyncHandler(TaskController.list));
+
+router.get('/summary', asyncHandler(TaskController.summary));
+
+router.get(
+  '/employee-workload',
+  asyncHandler(TaskController.employeeWorkload)
+);
 
 // GET /tasks/:id
 router.get('/:id', asyncHandler(TaskController.getOne));

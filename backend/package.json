@@ -1,7 +1,7 @@
 {
-  "name": "employee-task-tracker-backend",
+  "name": "task-tracker-backend",
   "version": "1.0.0",
-  "description": "Node.js + Express + MySQL backend for the Employee Task Tracker",
+  "description": "Node.js + Express + MySQL backend for the Task Tracker",
   "main": "src/server.js",
   "type": "commonjs",
   "scripts": {

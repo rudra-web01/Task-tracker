@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "Employee Task Tracker API",
+    "name": "Task Tracker API",
     "description": "Node.js + Express + MySQL backend. Set the {{baseUrl}} variable (default http://localhost:5000). The login/register requests auto-save the returned JWT to {{token}}, which every protected request uses.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },

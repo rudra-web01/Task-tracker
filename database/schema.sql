@@ -1,5 +1,5 @@
 -- =====================================================================
--- Employee Task Tracker — Database Schema
+--Task Tracker — Database Schema
 -- MySQL 8.x
 --
 -- Apply with:  mysql -u root -p < database/schema.sql

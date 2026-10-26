@@ -119,6 +119,54 @@ const TaskModel = {
     return { data, total, page: safePage, limit: safeLimit };
   },
 
+  
+  /**
+   * Return overall task counts grouped by status.
+   * This counts every task, not just the current dashboard page.
+   */
+  
+async getSummary() {
+  const rows = await query(
+    `SELECT
+       COUNT(*) AS total,
+       COALESCE(SUM(status = 'pending'), 0) AS pending,
+       COALESCE(SUM(status = 'in_progress'), 0) AS in_progress,
+       COALESCE(SUM(status = 'completed'), 0) AS completed,
+       COALESCE(
+         SUM(
+           due_date IS NOT NULL
+           AND due_date < CURDATE()
+           AND status <> 'completed'
+         ),
+         0
+       ) AS overdue
+     FROM tasks`
+  );
+
+  return rows[0];
+},
+
+
+  async getEmployeeWorkload() {
+    const rows = await query(
+      `SELECT
+         u.id AS employee_id,
+         u.name AS employee_name,
+         COUNT(t.id) AS total_tasks,
+         COALESCE(SUM(t.status = 'pending'), 0) AS pending,
+         COALESCE(SUM(t.status = 'in_progress'), 0) AS in_progress,
+         COALESCE(SUM(t.status = 'completed'), 0) AS completed
+       FROM users u
+       LEFT JOIN tasks t ON t.assigned_to = u.id
+       WHERE u.role = 'employee'
+       GROUP BY u.id, u.name
+       ORDER BY total_tasks DESC, u.name ASC`
+    );
+
+    return rows;
+  },
+
+
   async update(id, fields) {
     const allowed = ['title', 'description', 'status', 'due_date', 'assigned_to'];
     const sets = [];

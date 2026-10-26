@@ -15,31 +15,30 @@ function toPublic(user) {
 }
 
 const AuthService = {
-  async register({ name, email, password, role }) {
-    const finalRole = role || 'employee';
-    if (!VALID_ROLES.includes(finalRole)) {
-      throw ApiError.badRequest(`role must be one of: ${VALID_ROLES.join(', ')}`);
-    }
-
-    const existing = await UserModel.findByEmail(email);
-    if (existing) throw ApiError.conflict('Email is already registered');
-
-    const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-    const user = await UserModel.create({ name, email, passwordHash, role: finalRole });
-
-    const token = signToken({ id: user.id, role: user.role, name: user.name });
-    return { user: toPublic(user), token };
-  },
+  // baaki existing methods yahin rahenge
 
   async login({ email, password }) {
     const user = await UserModel.findByEmail(email);
-    // Same error whether the email or password is wrong (avoids user enumeration).
-    if (!user) throw ApiError.unauthorized('Invalid email or password');
+
+    if (
+      !user ||
+      user.is_active === false ||
+      user.is_active === 0
+    ) {
+      throw ApiError.unauthorized('Invalid email or password');
+    }
 
     const match = await bcrypt.compare(password, user.password);
-    if (!match) throw ApiError.unauthorized('Invalid email or password');
+    if (!match) {
+      throw ApiError.unauthorized('Invalid email or password');
+    }
 
-    const token = signToken({ id: user.id, role: user.role, name: user.name });
+    const token = signToken({
+      id: user.id,
+      role: user.role,
+      name: user.name,
+    });
+
     return { user: toPublic(user), token };
   },
 };

@@ -40,7 +40,7 @@ const TaskService = {
   },
 
   /**
-   * List tasks. Admins see everything; employees are scoped to their own tasks
+   * List tasks. Admins see everything; teams are scoped to their own tasks
    * regardless of any assignedTo filter they try to pass.
    */
   listTasks(opts, actor) {
@@ -50,11 +50,30 @@ const TaskService = {
     return TaskModel.findAll(opts);
   },
 
+    // Return dashboard statistics for admins.
+  getSummary(actor) {
+    if (actor.role !== 'admin') {
+      throw ApiError.forbidden('Only admins can view task statistics');
+    }
+
+    return TaskModel.getSummary();
+  },
+
+  
+  // Return task workload grouped by employee for admins.
+  getEmployeeWorkload(actor) {
+    if (actor.role !== 'admin') {
+      throw ApiError.forbidden('Only admins can view employee workload');
+    }
+    return TaskModel.getEmployeeWorkload();
+  },
+
+
   async getTaskById(id, actor) {
     const task = await TaskModel.findById(id);
     if (!task) throw ApiError.notFound('Task not found');
 
-    // Employees can only view their own tasks.
+    // teams can only view their own tasks.
     if (actor.role === 'employee' && task.assigned_to !== actor.id) {
       throw ApiError.forbidden('You can only view tasks assigned to you');
     }
@@ -79,12 +98,12 @@ const TaskService = {
       if (fields.due_date !== undefined) updates.due_date = fields.due_date;
       if (fields.assigned_to !== undefined) updates.assigned_to = fields.assigned_to;
     } else {
-      // Employees: only their own task, and only the status field.
+      // users: only their own task, and only the status field.
       if (task.assigned_to !== actor.id) {
         throw ApiError.forbidden('You can only update tasks assigned to you');
       }
       if (fields.status === undefined) {
-        throw ApiError.badRequest('Employees can only update the task status');
+        throw ApiError.badRequest('Users can only update the task status');
       }
       updates.status = fields.status;
     }

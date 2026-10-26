@@ -1,6 +1,6 @@
-# TaskFlow — Employee Task Tracker
+# TaskFlow — Task Tracker
 
-A small full-stack application where an **admin** manages employees and assigns tasks, and **employees** update the status of the tasks assigned to them.
+A small full-stack application where an **admin** manages teams and assigns tasks, and **users** update the status of the tasks assigned to them.
 
 Built with **Node.js + Express + MySQL** (backend) and **React + Vite** (frontend), using JWT authentication, bcrypt password hashing, and role-based access control.
 
@@ -43,7 +43,7 @@ Built with **Node.js + Express + MySQL** (backend) and **React + Vite** (fronten
 - Central error handling with a consistent error response shape
 - At least one API using a **SQL JOIN** (task lists join `users` for assignee details — see [`task.model.js`](backend/src/models/task.model.js))
 - React UI: Login → role-based redirect → Admin Dashboard / Employee Dashboard
-- Admin: view employees, create tasks, view all tasks in a table with edit
+- Admin: view teams, create tasks, view all tasks in a table with edit
 - Employee: view only their tasks, advance status (Pending → In Progress → Completed)
 
 **Bonus (implemented)**
@@ -169,9 +169,9 @@ All demo accounts use the password **`password123`**.
 | Email             | Role     |
 | ----------------- | -------- |
 | `admin@demo.com`  | admin    |
-| `aisha@demo.com`  | employee |
-| `ben@demo.com`    | employee |
-| `chen@demo.com`   | employee |
+| `aisha@demo.com`  | user |
+| `ben@demo.com`    | user |
+| `chen@demo.com`   | user |
 
 The login screen also has one-click buttons to fill these in.
 
@@ -217,7 +217,7 @@ Response:
 | Method | Endpoint       | Access                    | Description                                  |
 | ------ | -------------- | ------------------------- | -------------------------------------------- |
 | POST   | `/tasks`       | Admin only                | Create a task                                |
-| GET    | `/tasks`       | Auth (scoped by role)     | Admins: all tasks; employees: own tasks      |
+| GET    | `/tasks`       | Auth (scoped by role)     | Admins: all tasks; teams: own tasks      |
 | GET    | `/tasks/:id`   | Auth (own task or admin)  | Task details (with assignee)                 |
 | PUT    | `/tasks/:id`   | Admin (any field) / employee (own status) | Update a task              |
 
@@ -291,7 +291,7 @@ Import [`postman/Employee-Task-Tracker.postman_collection.json`](postman/Employe
 
 - **Layered architecture** keeps SQL in models, business rules + authorization in
   services, and HTTP concerns in controllers — so each layer is independently testable.
-- **Authorization is enforced server-side**, not just in the UI: employees are
+- **Authorization is enforced server-side**, not just in the UI: teams are
   scoped to their own tasks at the service layer even if they craft a request
   directly, and may only change a task's `status`. The React `ProtectedRoute` is a
   UX convenience on top of that.

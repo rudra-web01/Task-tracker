@@ -1,5 +1,5 @@
 /**
- * Seeds demo data: one admin, three employees, and a handful of tasks.
+ * Seeds demo data: one admin, three user, and a handful of tasks.
  * Passwords are bcrypt-hashed here so they match what the login endpoint expects.
  *
  *   npm run seed
