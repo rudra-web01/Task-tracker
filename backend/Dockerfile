@@ -1,11 +1,14 @@
-# FROM node:20-alpine
-# WORKDIR /app
 
-# # Install dependencies first (better layer caching).
-# COPY package*.json ./
-# RUN npm install --omit=dev
+FROM node:20-alpine
 
-# COPY . .
+WORKDIR /app/backend
 
-# EXPOSE 5000
-# CMD ["node", "src/server.js"]
+COPY backend/package*.json ./
+RUN npm install --omit=dev
+
+COPY backend/ ./
+COPY database/schema-safe.sql /app/database/schema-safe.sql
+
+EXPOSE 5000
+
+CMD ["node", "src/server.js"]

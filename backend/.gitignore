@@ -1,3 +1,4 @@
+
 node_modules/
 .env
 *.log
@@ -5,4 +6,7 @@ npm-debug.log*
 .DS_Store
 coverage/
 dist/
-.env.example
+
+# Environment files
+.env.*
+!.env.example
