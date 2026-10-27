@@ -9,7 +9,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ca = fs.readFileSync(
-  path.join(__dirname, '..', 'certs', 'ca.pem'),
+  path.join(__dirname, '..', '..', 'certs', 'ca.pem'),
   'utf8'
 );
 
