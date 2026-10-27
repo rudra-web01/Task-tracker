@@ -8,10 +8,6 @@ require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 
-const ca = fs.readFileSync(
-  path.join(__dirname, '..', '..', 'certs', 'ca.pem'),
-  'utf8'
-);
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
@@ -19,7 +15,6 @@ const pool = mysql.createPool({
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
   ssl: {
-  ca,
   rejectUnauthorized: true,
 },
   database: process.env.DB_NAME || 'task_tracker',

@@ -10,10 +10,6 @@ const fs = require('fs');
 const path = require('path');
 const mysql = require('mysql2/promise');
 
-const ca = fs.readFileSync(
-  path.join(__dirname, '..', '..', 'certs', 'ca.pem'),
-  'utf8'
-);
 
 async function migrate() {
   const schemaPath = path.join(__dirname, '..', '..', '..', 'database', 'schema-safe.sql');
@@ -27,7 +23,6 @@ async function migrate() {
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
   ssl: {
-  ca,
   rejectUnauthorized: true,
 },
   multipleStatements: true,

@@ -1,15 +1,15 @@
 -- =====================================================================
---Task Tracker — Database Schema
+-- Task Tracker - Database Schema
 -- MySQL 8.x
 --
 -- Apply with:  mysql -u root -p < database/schema.sql
 --        or:   cd backend && npm run migrate
 -- =====================================================================
 
-CREATE DATABASE IF NOT EXISTS defaultdb
+CREATE DATABASE IF NOT EXISTS task_tracker
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
-USE defaultdb;
+USE task_tracker;
 
 -- Drop in dependency order so the script is re-runnable.
 
