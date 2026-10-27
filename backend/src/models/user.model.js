@@ -1,7 +1,4 @@
-/**
- * User model — all SQL touching the `users` table lives here.
- * Keeping queries in the model layer keeps services free of raw SQL.
- */
+
 const { query } = require('../config/db');
 
 const UserModel = {
@@ -10,42 +7,43 @@ const UserModel = {
       'INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)',
       [name, email, passwordHash, role]
     );
-    return { id: result.insertId, name, email, role };
+
+    return {
+      id: result.insertId,
+      name,
+      email,
+      role,
+    };
   },
 
   async findByEmail(email) {
-    const rows = await query('SELECT * FROM users WHERE email = ? LIMIT 1', [email]);
+    const rows = await query(
+      'SELECT * FROM users WHERE email = ? LIMIT 1',
+      [email]
+    );
+
     return rows[0] || null;
   },
-
-  async updateStatus(id, isActive) {
-  await query(
-    'UPDATE users SET is_active = ? WHERE id = ?',
-    [isActive, id]
-  );
-
-  return this.findById(id);
-},
 
   async findById(id) {
     const rows = await query(
-      'SELECT id, name, email, role, created_at, is_active FROM users WHERE id = ? LIMIT 1',
+      'SELECT id, name, email, role, created_at FROM users WHERE id = ? LIMIT 1',
       [id]
     );
+
     return rows[0] || null;
   },
 
-  /** List all users. Optionally filter by role (e.g. only teams). */
   async findAll({ role } = {}) {
     if (role) {
       return query(
-        'SELECT id, name, email, role, created_at, is_active FROM users WHERE role = ? ORDER BY name ASC',
+        'SELECT id, name, email, role, created_at FROM users WHERE role = ? ORDER BY name ASC',
         [role]
       );
     }
 
     return query(
-      'SELECT id, name, email, role, created_at, is_active FROM users ORDER BY name ASC'
+      'SELECT id, name, email, role, created_at FROM users ORDER BY name ASC'
     );
   },
 };

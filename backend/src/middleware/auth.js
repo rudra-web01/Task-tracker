@@ -1,9 +1,4 @@
-/**
- * Authentication & authorization middleware.
- *
- *  - authenticate: verifies the Bearer JWT and attaches req.user
- *  - authorize(...roles): allows only the given roles (role-based access)
- */
+
 const { verifyToken } = require('../utils/jwt');
 const ApiError = require('../utils/ApiError');
 const UserModel = require('../models/user.model');
@@ -18,13 +13,25 @@ async function authenticate(req, _res, next) {
     );
   }
 
-  try {
-    const payload = verifyToken(token);
+  let payload;
 
+  // Only catch token verification errors here.
+  try {
+    payload = verifyToken(token);
+  } catch (err) {
+    return next(
+      ApiError.unauthorized('Invalid or expired token')
+    );
+  }
+
+  // Database errors should not be reported as token errors.
+  try {
     const user = await UserModel.findById(payload.id);
 
-    if (!user || user.is_active === false || user.is_active === 0) {
-      return next(ApiError.unauthorized('Account is inactive or unavailable'));
+    if (!user) {
+      return next(
+        ApiError.unauthorized('Account is unavailable')
+      );
     }
 
     req.user = {
@@ -33,20 +40,27 @@ async function authenticate(req, _res, next) {
       name: user.name,
     };
 
-    next();
-  } catch (_err) {
-    next(ApiError.unauthorized('Invalid or expired token'));
+    return next();
+  } catch (err) {
+    return next(err);
   }
 }
 
-/** Restrict a route to one or more roles. Use after authenticate. */
 function authorize(...roles) {
   return (req, _res, next) => {
-    if (!req.user) return next(ApiError.unauthorized());
-    if (!roles.includes(req.user.role)) {
-      return next(ApiError.forbidden('You do not have permission to perform this action'));
+    if (!req.user) {
+      return next(ApiError.unauthorized());
     }
-    next();
+
+    if (!roles.includes(req.user.role)) {
+      return next(
+        ApiError.forbidden(
+          'You do not have permission to perform this action'
+        )
+      );
+    }
+
+    return next();
   };
 }
 

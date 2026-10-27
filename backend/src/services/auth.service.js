@@ -20,13 +20,9 @@ const AuthService = {
   async login({ email, password }) {
     const user = await UserModel.findByEmail(email);
 
-    if (
-      !user ||
-      user.is_active === false ||
-      user.is_active === 0
-    ) {
-      throw ApiError.unauthorized('Invalid email or password');
-    }
+    if (!user) {
+    throw ApiError.unauthorized('Invalid email or password');
+  }
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
